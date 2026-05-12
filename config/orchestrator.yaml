@@ -1,0 +1,37 @@
+# Orchestrator module — dual-AI pipeline configuration
+# Heavy driver (Claude) + local auditor + local janitor via Ollama
+
+auditor:
+  provider: ollama
+  model: qwen3:8b
+  required: false           # false=FAIL OPEN (warn+continue), true=FAIL CLOSED (halt)
+  fallback_provider: anthropic
+  fallback_model: claude-haiku-4-5-20251001
+  severity_thresholds:
+    block_on: high          # severity=high halts the pipeline, returns AuditReport to driver
+    log_only: [low, med]    # severity=low/med → logged, pipeline continues
+
+janitor:
+  provider: ollama
+  model: qwen3:8b
+  # Paths the janitor is allowed to write/update (relative to project root)
+  scope_whitelist:
+    - "docs/"
+    - "CHANGELOG.md"
+    - ".planning/STATE.md"
+    - ".planning/CONTEXT.md"
+  # If true, dev_session_run(janitor_scope=[...]) can append extra paths for that session
+  allow_per_session_override: true
+
+pipeline:
+  phases:
+    - profile_select
+    - context_build
+    - plan_gate
+    - wave_execute
+    - state_persist
+    - verify
+    - finalize
+  # Auditor runs after every phase; janitor only runs after verify succeeds
+  audit_after_each_phase: true
+  janitor_runs_after: verify

@@ -1,0 +1,182 @@
+# Workflow profiles — define which modules activate per task category.
+# AI selects the best profile by analyzing the task description and matching
+# task_patterns. Required modules are always activated; optional modules are
+# activated only if already registered and available.
+
+profiles:
+  quick_question:
+    display_name: "Quick Question"
+    description: "Single-turn Q&A or explanation — no planning or persistence needed"
+    task_patterns:
+      - "what is"
+      - "explain"
+      - "how does"
+      - "quick question"
+      - "briefly"
+      - "tell me"
+    required_modules: [llm, context]
+    optional_modules: []
+    feature_overrides:
+      planning_gate_enabled: false
+      auto_compress_context: false
+      persist_state_to_disk: false
+    llm_tier: fast
+    max_tokens_budget: 4096
+
+  code_review:
+    display_name: "Code Review"
+    description: "Review code quality, security, or correctness — read-only, no execution"
+    task_patterns:
+      - "review"
+      - "audit"
+      - "check code"
+      - "find bugs"
+      - "security scan"
+      - "code quality"
+      - "lint"
+    required_modules: [llm, context, project_detection]
+    optional_modules: [solutions]
+    feature_overrides:
+      planning_gate_enabled: false
+      auto_compress_context: true
+      persist_state_to_disk: false
+    llm_tier: balanced
+    max_tokens_budget: 32000
+
+  debug:
+    display_name: "Debug Session"
+    description: "Investigate and fix a bug — needs project context and lightweight planning"
+    task_patterns:
+      - "debug"
+      - "fix bug"
+      - "error"
+      - "exception"
+      - "trace"
+      - "broken"
+      - "not working"
+      - "failing"
+    required_modules: [llm, context, project_detection, planning]
+    optional_modules: [workflow]
+    feature_overrides:
+      planning_gate_enabled: true
+      planning_require_approval: false
+      auto_compress_context: true
+      persist_state_to_disk: true
+    llm_tier: balanced
+    max_tokens_budget: 64000
+
+  feature_build:
+    display_name: "Feature Build"
+    description: "Implement a new feature end-to-end — full planning + execution + verification"
+    task_patterns:
+      - "build"
+      - "implement"
+      - "create feature"
+      - "add feature"
+      - "develop"
+      - "scaffold"
+      - "write"
+    required_modules: [llm, context, project_detection, planning, workflow]
+    optional_modules: [solutions]
+    feature_overrides:
+      planning_gate_enabled: true
+      planning_require_approval: true
+      auto_compress_context: true
+      persist_state_to_disk: true
+      solutions_search_enabled: true
+    llm_tier: quality
+    max_tokens_budget: 150000
+
+  research:
+    display_name: "Research & Discovery"
+    description: "Find libraries, compare solutions, plan integrations — no code execution"
+    task_patterns:
+      - "research"
+      - "find library"
+      - "compare"
+      - "best way"
+      - "alternatives"
+      - "options for"
+      - "look for"
+      - "search"
+    required_modules: [llm, context, solutions]
+    optional_modules: [project_detection]
+    feature_overrides:
+      planning_gate_enabled: false
+      auto_compress_context: true
+      persist_state_to_disk: false
+      solutions_search_enabled: true
+    llm_tier: balanced
+    max_tokens_budget: 32000
+
+  refactor:
+    display_name: "Refactor"
+    description: "Restructure existing code — needs project detection, planning, and execution"
+    task_patterns:
+      - "refactor"
+      - "restructure"
+      - "clean up"
+      - "migrate"
+      - "rename"
+      - "reorganize"
+      - "extract"
+      - "move"
+    required_modules: [llm, context, project_detection, planning, workflow]
+    optional_modules: [solutions]
+    feature_overrides:
+      planning_gate_enabled: true
+      planning_require_approval: true
+      auto_compress_context: true
+      persist_state_to_disk: true
+    llm_tier: quality
+    max_tokens_budget: 150000
+
+  devops:
+    display_name: "DevOps / Infrastructure"
+    description: "CI/CD, Docker, deployment, infra scripts — full pipeline with verification"
+    task_patterns:
+      - "docker"
+      - "deploy"
+      - "kubernetes"
+      - "ci/cd"
+      - "pipeline"
+      - "infrastructure"
+      - "terraform"
+      - "helm"
+      - "github actions"
+    required_modules: [llm, context, project_detection, planning, workflow]
+    optional_modules: [solutions]
+    feature_overrides:
+      planning_gate_enabled: true
+      planning_require_approval: true
+      auto_compress_context: true
+      persist_state_to_disk: true
+    llm_tier: quality
+    max_tokens_budget: 150000
+
+  orchestrated:
+    display_name: "Orchestrated Dev Session"
+    description: "Full dual-AI pipeline — heavy driver + local auditor + local janitor. Use for complex features requiring post-phase verification."
+    task_patterns:
+      - "orchestrate"
+      - "dual-ai"
+      - "with auditor"
+      - "full pipeline"
+      - "session run"
+    required_modules: [llm, context, planning, workflow, orchestrator]
+    optional_modules: [solutions, memory]
+    feature_overrides:
+      planning_gate_enabled: true
+      planning_require_approval: true
+      auto_compress_context: true
+      persist_state_to_disk: true
+      solutions_search_enabled: true
+      auditor_required: false
+    llm_tier: quality
+    max_tokens_budget: 150000
+
+# Default profile used when AI cannot confidently classify the task
+default_profile: feature_build
+
+# Classification model tier used for task analysis (before a profile is chosen)
+classification_tier: fast

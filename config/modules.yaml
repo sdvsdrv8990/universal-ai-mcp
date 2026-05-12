@@ -1,0 +1,49 @@
+# Module registry — defines load order and optional/required status
+# Modules load in the order listed; dependency requirements are enforced at startup
+
+modules:
+  - name: llm
+    required: true
+    description: "LLM provider abstraction — must load first, all other modules depend on it"
+
+  - name: context
+    required: true
+    depends_on: [llm]
+    description: "Blockify IdeaBlock context optimization"
+
+  - name: planning
+    required: true
+    depends_on: [llm, context]
+    description: "Planning gate — prevents execution without approved plan"
+
+  - name: project_detection
+    required: true
+    depends_on: [llm]
+    description: "Auto-detects project stack and conventions"
+
+  - name: solutions
+    required: false
+    depends_on: [llm, project_detection]
+    description: "GitHub search + dependency optimization + integration planning"
+
+  - name: workflow
+    required: true
+    depends_on: [planning, context]
+    description: "Task execution and GSD-style state persistence"
+
+  - name: memory
+    required: false
+    depends_on: [llm]
+    description: "Local vector DB — global library docs + per-project context via ChromaDB + Ollama embeddings"
+
+  - name: orchestrator
+    required: false
+    depends_on: [llm, context, planning, workflow]
+    description: "Dual-AI pipeline: heavy driver + local auditor (Ollama/qwen3:8b) + local janitor"
+
+# Feature flags
+features:
+  planning_gate_enabled: true      # Disable only for testing
+  auto_compress_context: true      # Trigger compression automatically
+  solutions_search_enabled: true   # Set false if no GitHub token
+  persist_state_to_disk: true      # Write .planning/ artifacts

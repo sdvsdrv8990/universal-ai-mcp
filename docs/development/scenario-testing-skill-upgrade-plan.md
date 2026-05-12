@@ -90,7 +90,7 @@ Allowed literals must be part of an explicit contract, enum, test fixture, or do
 
 ## Implementation Phases
 
-### Phase 1 - Skill Contract Updates
+### Phase 1 — Skill Contract Updates
 
 Files:
 
@@ -107,7 +107,7 @@ Control point:
 
 - A reviewer can use the skills to decide whether to update an existing scenario test or create a new one.
 
-### Phase 2 - Orchestrator Auditor Upgrade
+### Phase 2 — Orchestrator Auditor Upgrade
 
 Files:
 
@@ -125,7 +125,7 @@ Control point:
 
 - High severity must block only for structural risks: missing scenario coverage for changed public behavior, unconfigured hardcoded runtime values, broken module boundaries, or unsafe fallbacks.
 
-### Phase 3 - Planning Gate Upgrade
+### Phase 3 — Planning Gate Upgrade
 
 Files:
 
@@ -141,7 +141,7 @@ Control point:
 
 - The plan must identify scenario coverage before implementation starts.
 
-### Phase 4 - Optional Tooling Evaluation
+### Phase 4 — Optional Tooling Evaluation
 
 External candidates:
 
@@ -156,7 +156,7 @@ Control point:
 
 - Do not add a dependency unless it covers a concrete scenario gap in this project.
 
-### Phase 5 - Runtime Test Structure
+### Phase 5 — Runtime Test Structure
 
 Files:
 

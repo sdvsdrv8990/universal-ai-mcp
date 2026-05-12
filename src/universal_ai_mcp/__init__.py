@@ -1,0 +1,3 @@
+"""Universal AI MCP Server — modular, provider-agnostic AI coding assistant."""
+
+__version__ = "1.0.0"

@@ -1,0 +1,60 @@
+# Registry mirrors — ordered by priority (fastest first per region)
+# Scripts auto-test reachability and select the first available mirror.
+# Add your own corporate mirror at the top of any list.
+
+pypi:
+  # Test URL: curl -s --head --max-time 3 <url>
+  mirrors:
+    - name: pypi-official
+      url: https://pypi.org/simple
+      description: Official PyPI index
+    - name: tsinghua
+      url: https://pypi.tuna.tsinghua.edu.cn/simple
+      description: Tsinghua University mirror (China)
+    - name: ustc
+      url: https://pypi.mirrors.ustc.edu.cn/simple
+      description: University of Science and Technology of China
+    - name: aliyun
+      url: https://mirrors.aliyun.com/pypi/simple
+      description: Alibaba Cloud mirror
+    - name: douban
+      url: https://pypi.doubanio.com/simple
+      description: Douban mirror
+    - name: bfsu
+      url: https://mirrors.bfsu.edu.cn/pypi/web/simple
+      description: Beijing Foreign Studies University mirror
+
+docker:
+  # Base image alternatives for python:3.12-slim
+  # Used by Dockerfile ARG BASE_PYTHON_IMAGE
+  base_images:
+    - name: docker-hub
+      image: python:3.12-slim
+      description: Official Docker Hub (requires login for >100 pulls/6h)
+    - name: aliyun
+      image: registry.cn-hangzhou.aliyuncs.com/library/python:3.12-slim
+      description: Alibaba Cloud Container Registry
+    - name: tencent
+      image: ccr.ccs.tencentyun.com/library/python:3.12-slim
+      description: Tencent Cloud Container Registry
+    - name: netease
+      image: hub.c.163.com/library/python:3.12-slim
+      description: NetEase Container Registry
+
+  # uv installer alternatives
+  # Used by Dockerfile ARG UV_IMAGE
+  uv_images:
+    - name: ghcr
+      image: ghcr.io/astral-sh/uv:latest
+      description: GitHub Container Registry (official)
+    - name: install-script
+      image: ""
+      description: "Fallback: install uv via pip (no extra registry needed)"
+
+uv_installer:
+  # uv binary installer script alternatives
+  scripts:
+    - name: astral-official
+      url: https://astral.sh/uv/install.sh
+    - name: github-raw
+      url: https://raw.githubusercontent.com/astral-sh/uv/main/scripts/install.sh

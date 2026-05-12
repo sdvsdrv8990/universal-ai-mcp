@@ -1,0 +1,47 @@
+# LLM Provider configurations
+# Environment variables override these defaults
+
+providers:
+  anthropic:
+    enabled: true
+    priority: 0
+    base_url: "https://api.anthropic.com"
+    default_model: "claude-sonnet-4-6"
+    available_models:
+      - "claude-opus-4-7"
+      - "claude-sonnet-4-6"
+      - "claude-haiku-4-5-20251001"
+    max_context_tokens: 200000
+    supports_streaming: true
+
+  openrouter:
+    enabled: true
+    priority: 1
+    base_url: "https://openrouter.ai/api/v1"
+    default_model: "anthropic/claude-sonnet-4-6"
+    max_context_tokens: 200000
+    supports_streaming: true
+
+  ollama:
+    enabled: true
+    priority: 2
+    base_url: "http://localhost:11434"
+    default_model: "llama3.2"
+    available_models:
+      - "llama3.2"
+      - "llama3.2:3b"
+      - "mistral"
+      - "qwen2.5-coder"
+    max_context_tokens: 128000
+    supports_streaming: true
+
+# Task-to-tier mapping
+tier_routing:
+  planning: balanced      # planner needs good reasoning
+  questioning: fast       # questions need speed not depth
+  tool_selection: fast
+  context_compression: fast
+  execution: balanced
+  verification: balanced
+  stack_advice: balanced
+  direct_completion: balanced
