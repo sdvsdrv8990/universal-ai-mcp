@@ -1,0 +1,83 @@
+# Tech stack templates — curated minimal stacks for common project types
+# Used by StackAdvisor when no specific constraints are given
+
+templates:
+  python_api:
+    display_name: "Python REST API"
+    language: python
+    runtime: "cpython 3.12"
+    package_manager: uv
+    frameworks: [fastapi, pydantic]
+    testing: pytest
+    core_dependencies:
+      - package: fastapi
+        reason: async-first, auto OpenAPI docs, high performance
+      - package: pydantic
+        reason: data validation at system boundaries
+      - package: uvicorn
+        reason: ASGI server with minimal overhead
+      - package: httpx
+        reason: async HTTP client with the same interface as requests
+    deployment: "docker + cloud run"
+
+  python_mcp_server:
+    display_name: "Python MCP Server"
+    language: python
+    runtime: "cpython 3.12"
+    package_manager: uv
+    frameworks: [mcp, fastmcp]
+    testing: pytest
+    core_dependencies:
+      - package: "mcp[cli]"
+        reason: official MCP SDK
+      - package: pydantic-settings
+        reason: type-safe config from env
+      - package: structlog
+        reason: structured JSON logs
+    deployment: "uvicorn + docker"
+
+  typescript_api:
+    display_name: "TypeScript REST API"
+    language: typescript
+    runtime: "bun 1.x"
+    package_manager: bun
+    frameworks: [hono, zod]
+    testing: bun:test
+    core_dependencies:
+      - package: hono
+        reason: ultra-fast, minimal Cloudflare/Bun-native API framework
+      - package: zod
+        reason: schema validation with TypeScript-first inference
+    deployment: "bun + docker"
+
+  fullstack_nextjs:
+    display_name: "Full-Stack Next.js SaaS"
+    language: typescript
+    runtime: "node 22 / bun"
+    package_manager: bun
+    frameworks: [nextjs, tailwind, prisma, zod]
+    testing: vitest
+    core_dependencies:
+      - package: "next"
+        reason: SSR + API routes in one, huge ecosystem
+      - package: tailwindcss
+        reason: utility-first CSS, eliminates custom CSS sprawl
+      - package: prisma
+        reason: type-safe ORM with migrations
+      - package: "next-auth"
+        reason: auth without custom session code
+    deployment: "vercel / docker"
+
+  go_service:
+    display_name: "Go Microservice"
+    language: go
+    runtime: "go 1.23"
+    package_manager: go
+    frameworks: [chi, sqlc]
+    testing: "go test"
+    core_dependencies:
+      - package: chi
+        reason: lightweight HTTP router, stdlib-compatible
+      - package: sqlc
+        reason: compile-time SQL → Go type generation, zero ORM overhead
+    deployment: "docker + kubernetes"

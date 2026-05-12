@@ -1,0 +1,17 @@
+# uv configuration — mirror fallback for Python package installation
+#
+# Priority resolution:
+#   1. UV_INDEX_URL env variable (set by check-mirrors.sh or manually)
+#   2. [[tool.uv.index]] entries in pyproject.toml (tried in order)
+#   3. Built-in PyPI default
+#
+# To override at runtime:
+#   UV_INDEX_URL=https://pypi.tuna.tsinghua.edu.cn/simple uv sync
+#
+# To hardcode a mirror permanently, add to pyproject.toml:
+#   [[tool.uv.index]]
+#   url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+#   default = true
+
+# This file intentionally left minimal — configure mirrors via env var
+# or via pyproject.toml [[tool.uv.index]] entries.
